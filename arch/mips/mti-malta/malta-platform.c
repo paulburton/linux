@@ -32,25 +32,6 @@
 #include <asm/mips-boards/maltaint.h>
 #include <mtd/mtd-abi.h>
 
-struct resource malta_rtc_resources[] = {
-	{
-		.start	= RTC_PORT(0),
-		.end	= RTC_PORT(7),
-		.flags	= IORESOURCE_IO,
-	}, {
-		.start	= RTC_IRQ,
-		.end	= RTC_IRQ,
-		.flags	= IORESOURCE_IRQ,
-	}
-};
-
-static struct platform_device malta_rtc_device = {
-	.name		= "rtc_cmos",
-	.id		= -1,
-	.resource	= malta_rtc_resources,
-	.num_resources	= ARRAY_SIZE(malta_rtc_resources),
-};
-
 static struct mtd_partition malta_mtd_partitions[] = {
 	{
 		.name =		"YAMON",
@@ -92,7 +73,6 @@ static struct platform_device malta_flash_device = {
 };
 
 static struct platform_device *malta_devices[] __initdata = {
-	&malta_rtc_device,
 	&malta_flash_device,
 };
 

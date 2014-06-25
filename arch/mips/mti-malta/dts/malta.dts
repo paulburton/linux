@@ -38,6 +38,14 @@
 		#size-cells = <1>;
 		ranges = <1 0 0 0x1000>;
 
+		rtc: mc146818@0x70 {
+			compatible = "motorola,mc146818";
+			reg = <1 0x70 0x8>;
+
+			interrupt-parent = <&i8259>;
+			interrupts = <8>;
+		};
+
 		uart0: uart@0x3f8 {
 			compatible = "ns16550";
 			reg = <1 0x3f8 0x8>;
