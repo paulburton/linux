@@ -345,6 +345,7 @@ config MIPS_MALTA
 	select SYS_SUPPORTS_MULTITHREADING
 	select SYS_SUPPORTS_SMARTMIPS
 	select SYS_SUPPORTS_ZBOOT
+	select USE_OF
 	help
 	  This enables support for the MIPS Technologies Malta evaluation
 	  board.

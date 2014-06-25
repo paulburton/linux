@@ -5,6 +5,9 @@
 # Copyright (C) 2008 Wind River Systems, Inc.
 #   written by Ralf Baechle <ralf@linux-mips.org>
 #
+obj-y				+= dt.o
+obj-y				+= dts/
+
 obj-y				+= malta-amon.o
 obj-y				+= malta-display.o
 obj-y				+= malta-init.o
