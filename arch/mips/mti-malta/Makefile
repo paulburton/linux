@@ -9,7 +9,6 @@ obj-y				+= dt.o
 obj-y				+= dts/
 
 obj-y				+= malta-amon.o
-obj-y				+= malta-display.o
 obj-y				+= malta-init.o
 obj-y				+= malta-int.o
 obj-y				+= malta-memory.o
