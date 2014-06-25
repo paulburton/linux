@@ -32,6 +32,18 @@
 		};
 	};
 
+	fpga {
+		compatible = "simple-bus";
+		#address-cells = <1>;
+		#size-cells = <1>;
+		ranges = <0 0x1f000000 0x100000>;
+
+		lcd: lcd@0x410 {
+			compatible = "img,malta-lcd";
+			reg = <0x410 0x48>;
+		};
+	};
+
 	board {
 		compatible = "simple-bus";
 		#address-cells = <1>;
