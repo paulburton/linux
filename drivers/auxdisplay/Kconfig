@@ -119,4 +119,11 @@ config CFAG12864B_RATE
 	  If you compile this as a module, you can still override this
 	  value using the module parameters.
 
+config MALTA_LCD
+	tristate "MIPS Malta LCD Display"
+	default y if MIPS_MALTA
+	help
+	  Enable this to support the 8 character LCD display found on the MIPS
+	  Malta development board.
+
 endif # AUXDISPLAY
