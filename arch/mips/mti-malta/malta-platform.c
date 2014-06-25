@@ -32,42 +32,6 @@
 #include <asm/mips-boards/maltaint.h>
 #include <mtd/mtd-abi.h>
 
-#define SMC_PORT(base, int)						\
-{									\
-	.iobase		= base,						\
-	.irq		= int,						\
-	.uartclk	= 1843200,					\
-	.iotype		= UPIO_PORT,					\
-	.flags		= UPF_BOOT_AUTOCONF | UPF_SKIP_TEST,		\
-	.regshift	= 0,						\
-}
-
-#define CBUS_UART_FLAGS (UPF_BOOT_AUTOCONF | UPF_SKIP_TEST | UPF_IOREMAP)
-
-static struct plat_serial8250_port uart8250_data[] = {
-	SMC_PORT(0x3F8, 4),
-	SMC_PORT(0x2F8, 3),
-#ifndef CONFIG_MIPS_CMP
-	{
-		.mapbase	= 0x1f000900,	/* The CBUS UART */
-		.irq		= MIPS_CPU_IRQ_BASE + MIPSCPU_INT_MB2,
-		.uartclk	= 3686400,	/* Twice the usual clk! */
-		.iotype		= UPIO_MEM32,
-		.flags		= CBUS_UART_FLAGS,
-		.regshift	= 3,
-	},
-#endif
-	{ },
-};
-
-static struct platform_device malta_uart8250_device = {
-	.name			= "serial8250",
-	.id			= PLAT8250_DEV_PLATFORM,
-	.dev			= {
-		.platform_data	= uart8250_data,
-	},
-};
-
 struct resource malta_rtc_resources[] = {
 	{
 		.start	= RTC_PORT(0),
@@ -128,7 +92,6 @@ static struct platform_device malta_flash_device = {
 };
 
 static struct platform_device *malta_devices[] __initdata = {
-	&malta_uart8250_device,
 	&malta_rtc_device,
 	&malta_flash_device,
 };

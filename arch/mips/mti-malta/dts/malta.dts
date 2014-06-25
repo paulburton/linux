@@ -32,6 +32,37 @@
 		};
 	};
 
+	isa {
+		compatible = "isa";
+		#address-cells = <2>;
+		#size-cells = <1>;
+		ranges = <1 0 0 0x1000>;
+
+		uart0: uart@0x3f8 {
+			compatible = "ns16550";
+			reg = <1 0x3f8 0x8>;
+
+			clock-frequency = <1843200>;
+
+			interrupt-parent = <&i8259>;
+			interrupts = <4>;
+
+			no-loopback-test;
+		};
+
+		uart1: uart@0x2f8 {
+			compatible = "ns16550";
+			reg = <1 0x2f8 0x8>;
+
+			clock-frequency = <1843200>;
+
+			interrupt-parent = <&i8259>;
+			interrupts = <3>;
+
+			no-loopback-test;
+		};
+	};
+
 	fpga {
 		compatible = "simple-bus";
 		#address-cells = <1>;
@@ -41,6 +72,19 @@
 		lcd: lcd@0x410 {
 			compatible = "img,malta-lcd";
 			reg = <0x410 0x48>;
+		};
+
+		uart2: uart@900 {
+			compatible = "ns16550";
+
+			reg = <0x900 0x40>;
+			reg-io-width = <4>;
+			reg-shift = <3>;
+
+			clock-frequency = <3686400>;
+
+			interrupt-parent = <&cpu_intc>;
+			interrupts = <4>;
 		};
 	};
 
