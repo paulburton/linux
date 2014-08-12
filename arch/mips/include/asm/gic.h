@@ -217,6 +217,10 @@
 #define GIC_VPE_COMPARE_LO_OFS		0x00a0
 #define GIC_VPE_COMPARE_HI_OFS		0x00a4
 
+#define GIC_VPE_MAP_OFS			0x0040
+#define GIC_VPE_MAP_TO_PIN(intr) \
+	(GIC_VPE_MAP_OFS + 4 * (intr))
+
 #define GIC_VPE_EIC_SHADOW_SET_BASE	0x0100
 #define GIC_VPE_EIC_SS(intr) \
 	(GIC_VPE_EIC_SHADOW_SET_BASE + (4 * intr))
@@ -354,6 +358,11 @@ struct gic_shared_intr_map {
 #define GIC_CPU_PIN_OFFSET	2
 
 /* Local GIC interrupts. */
+#define GIC_LOCAL_INTR_WD	0 /* GIC watchdog timer */
+#define GIC_LOCAL_INTR_COMPARE	1 /* GIC count/compare timer */
+#define GIC_NUM_LOCAL_INTRS	2
+
+/* Pin mapping for CPU interrupts routable through the GIC. */
 #define GIC_INT_TMR		(GIC_CPU_INT5)
 #define GIC_INT_PERFCTR		(GIC_CPU_INT5)
 
@@ -389,6 +398,9 @@ extern void gic_bind_eic_interrupt(int irq, int set);
 extern unsigned int gic_get_timer_pending(void);
 extern void gic_get_int_mask(unsigned long *dst, const unsigned long *src);
 extern unsigned int gic_get_int(void);
+extern void gic_get_local_int_mask(unsigned long *dst,
+				   const unsigned long *src);
+extern unsigned int gic_get_local_int(void);
 extern void gic_enable_interrupt(int irq_vec);
 extern void gic_disable_interrupt(int irq_vec);
 extern void gic_irq_ack(struct irq_data *d);
