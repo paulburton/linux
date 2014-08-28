@@ -13,6 +13,7 @@
 #include <linux/ioport.h>
 #include <linux/interrupt.h>
 #include <linux/kernel.h>
+#include <linux/of_irq.h>
 #include <linux/spinlock.h>
 #include <linux/syscore_ops.h>
 #include <linux/irq.h>
@@ -328,4 +329,64 @@ void __init init_i8259_irqs(void)
 	}
 
 	setup_irq(I8259A_IRQ_BASE + PIC_CASCADE_IR, &irq2);
+}
+
+static int i8259_irq_domain_map(struct irq_domain *d, unsigned int irq,
+				irq_hw_number_t hw)
+{
+	irq_set_chip_and_handler(irq, &i8259A_chip, handle_level_irq);
+	irq_set_probe(irq);
+
+	return 0;
+}
+
+static const struct irq_domain_ops i8259_irq_domain_ops = {
+	.map = i8259_irq_domain_map,
+	.xlate = irq_domain_xlate_onecell,
+};
+
+static void i8259_irq_dispatch(unsigned int irq, struct irq_desc *desc)
+{
+	struct irq_domain *domain = irq_get_handler_data(irq);
+	int hwirq = i8259_irq();
+
+	if (hwirq < 0)
+		return;
+
+	irq = irq_linear_revmap(domain, hwirq);
+	generic_handle_irq(irq);
+}
+
+int __init i8259_of_init(struct device_node *node, struct device_node *parent)
+{
+	struct irq_domain *domain;
+	unsigned int parent_irq;
+
+	parent_irq = irq_of_parse_and_map(node, 0);
+	if (!parent_irq) {
+		pr_err("Failed to map i8259 parent IRQ\n");
+		return -ENODEV;
+	}
+
+	domain = irq_domain_add_legacy(node, 16, I8259A_IRQ_BASE, 0,
+				       &i8259_irq_domain_ops, NULL);
+	if (!domain) {
+		pr_err("Failed to add i8259 IRQ domain\n");
+		return -ENOMEM;
+	}
+
+	insert_resource(&ioport_resource, &pic1_io_resource);
+	insert_resource(&ioport_resource, &pic2_io_resource);
+
+	init_8259A(0);
+
+	irq_set_chip_and_handler(I8259A_IRQ_BASE + PIC_CASCADE_IR,
+				 &i8259A_chip, handle_level_irq);
+	irq_set_probe(I8259A_IRQ_BASE + PIC_CASCADE_IR);
+	setup_irq(I8259A_IRQ_BASE + PIC_CASCADE_IR, &irq2);
+
+	irq_set_chained_handler(parent_irq, i8259_irq_dispatch);
+	irq_set_handler_data(parent_irq, domain);
+
+	return 0;
 }
