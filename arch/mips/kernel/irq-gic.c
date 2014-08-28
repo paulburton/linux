@@ -594,8 +594,8 @@ static int gic_irq_pin[GIC_NUM_INTRS];
 static inline int gic_irq_to_cpu_pin(unsigned int hwirq)
 {
 	if (gic_is_local_irq(hwirq))
-		return gic_cpu_pin[0] - GIC_CPU_PIN_OFFSET;
-	return gic_cpu_pin[gic_irq_pin[hwirq]] - GIC_CPU_PIN_OFFSET;
+		return gic_cpu_pin[0] - MIPS_CPU_IRQ_BASE - GIC_CPU_PIN_OFFSET;
+	return gic_cpu_pin[gic_irq_pin[hwirq]] - MIPS_CPU_IRQ_BASE - GIC_CPU_PIN_OFFSET;
 }
 
 #ifdef CONFIG_MIPS_GIC_IPI
