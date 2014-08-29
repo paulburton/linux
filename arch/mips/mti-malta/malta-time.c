@@ -36,7 +36,6 @@
 #include <asm/setup.h>
 #include <asm/time.h>
 #include <asm/mc146818-time.h>
-#include <asm/msc01_ic.h>
 #include <asm/gic.h>
 
 #include <asm/mips-boards/generic.h>

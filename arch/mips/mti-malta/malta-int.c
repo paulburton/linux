@@ -33,7 +33,6 @@
 #include <asm/gt64120.h>
 #include <asm/mips-boards/generic.h>
 #include <asm/mips-boards/msc01_pci.h>
-#include <asm/msc01_ic.h>
 #include <asm/gic.h>
 #include <asm/setup.h>
 #include <asm/rtlx.h>
@@ -124,12 +123,6 @@ static void corehi_irqdispatch(void)
 	*/
 
 	switch (mips_revision_sconid) {
-	case MIPS_REVISION_SCON_SOCIT:
-	case MIPS_REVISION_SCON_ROCIT:
-	case MIPS_REVISION_SCON_SOCITSC:
-	case MIPS_REVISION_SCON_SOCITSCP:
-		ll_msc_irq();
-		break;
 	case MIPS_REVISION_SCON_GT64120:
 		intrcause = GT_READ(GT_INTRCAUSE_OFS);
 		datalo = GT_READ(GT_CPUERR_ADDRLO_OFS);
@@ -246,27 +239,6 @@ static struct irqaction corehi_irqaction = {
 	.flags = IRQF_NO_THREAD,
 };
 
-static msc_irqmap_t msc_irqmap[] __initdata = {
-	{MSC01C_INT_TMR,		MSC01_IRQ_EDGE, 0},
-	{MSC01C_INT_PCI,		MSC01_IRQ_LEVEL, 0},
-};
-static int msc_nr_irqs __initdata = ARRAY_SIZE(msc_irqmap);
-
-static msc_irqmap_t msc_eicirqmap[] __initdata = {
-	{MSC01E_INT_SW0,		MSC01_IRQ_LEVEL, 0},
-	{MSC01E_INT_SW1,		MSC01_IRQ_LEVEL, 0},
-	{MSC01E_INT_I8259A,		MSC01_IRQ_LEVEL, 0},
-	{MSC01E_INT_SMI,		MSC01_IRQ_LEVEL, 0},
-	{MSC01E_INT_COREHI,		MSC01_IRQ_LEVEL, 0},
-	{MSC01E_INT_CORELO,		MSC01_IRQ_LEVEL, 0},
-	{MSC01E_INT_TMR,		MSC01_IRQ_EDGE, 0},
-	{MSC01E_INT_PCI,		MSC01_IRQ_LEVEL, 0},
-	{MSC01E_INT_PERFCTR,		MSC01_IRQ_LEVEL, 0},
-	{MSC01E_INT_CPUCTR,		MSC01_IRQ_LEVEL, 0}
-};
-
-static int msc_nr_eicirqs __initdata = ARRAY_SIZE(msc_eicirqmap);
-
 void __init arch_init_ipiirq(int irq, struct irqaction *action)
 {
 	setup_irq(irq, action);
@@ -299,31 +271,6 @@ void __init arch_init_irq(void)
 		pr_debug("GIC present\n");
 
 	of_irq_init(malta_irq_ids);
-
-	switch (mips_revision_sconid) {
-	case MIPS_REVISION_SCON_SOCIT:
-	case MIPS_REVISION_SCON_ROCIT:
-		if (cpu_has_veic)
-			init_msc_irqs(MIPS_MSC01_IC_REG_BASE,
-					MSC01E_INT_BASE, msc_eicirqmap,
-					msc_nr_eicirqs);
-		else
-			init_msc_irqs(MIPS_MSC01_IC_REG_BASE,
-					MSC01C_INT_BASE, msc_irqmap,
-					msc_nr_irqs);
-		break;
-
-	case MIPS_REVISION_SCON_SOCITSC:
-	case MIPS_REVISION_SCON_SOCITSCP:
-		if (cpu_has_veic)
-			init_msc_irqs(MIPS_SOCITSC_IC_REG_BASE,
-					MSC01E_INT_BASE, msc_eicirqmap,
-					msc_nr_eicirqs);
-		else
-			init_msc_irqs(MIPS_SOCITSC_IC_REG_BASE,
-					MSC01C_INT_BASE, msc_irqmap,
-					msc_nr_irqs);
-	}
 
 	if (cpu_has_veic) {
 		set_vi_handler(MSC01E_INT_COREHI, corehi_irqdispatch);
