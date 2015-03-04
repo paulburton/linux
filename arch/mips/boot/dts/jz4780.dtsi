@@ -309,4 +309,19 @@
 		clocks = <&ext>, <&cgu JZ4780_CLK_UART4>;
 		clock-names = "baud", "module";
 	};
+
+	nemc: nemc@13410000 {
+		compatible = "ingenic,jz4780-nemc";
+		reg = <0x13410000 0x10000>;
+		#address-cells = <2>;
+		#size-cells = <1>;
+		ranges = <1 0 0x1b000000 0x1000000
+		          2 0 0x1a000000 0x1000000
+		          3 0 0x19000000 0x1000000
+		          4 0 0x18000000 0x1000000
+		          5 0 0x17000000 0x1000000
+		          6 0 0x16000000 0x1000000>;
+
+		clocks = <&cgu JZ4780_CLK_NEMC>;
+	};
 };
