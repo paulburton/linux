@@ -1,5 +1,6 @@
 /dts-v1/;
 
+#include <dt-bindings/gpio/gpio.h>
 #include "jz4780.dtsi"
 
 / {
@@ -14,8 +15,44 @@
 		reg = <0x0 0x10000000
 		       0x30000000 0x30000000>;
 	};
+
+	eth0_power: fixedregulator@0 {
+		compatible = "regulator-fixed";
+		regulator-name = "eth0_power";
+		gpio = <&gpb 25 GPIO_ACTIVE_LOW>;
+		enable-active-high;
+	};
 };
 
 &ext {
 	clock-frequency = <48000000>;
+};
+
+&nemc {
+	pinctrl-names = "default";
+	pinctrl-0 = <&pins_nemc_data
+	             &pins_nemc_rd_we
+	             &pins_nemc_frd_fwe
+	             &pins_nemc_cs6
+	             &pins_nemc_cle_ale>;
+
+	dm9000@6 {
+		compatible = "davicom,dm9000";
+		davicom,no-eeprom;
+
+		reg = <6 0x0 1   /* addr */
+		       6 0x2 1>; /* data */
+
+		ingenic,nemc-tAS = <15>;
+		ingenic,nemc-tAH = <10>;
+		ingenic,nemc-tBP = <20>;
+		ingenic,nemc-tAW = <50>;
+		ingenic,nemc-tSTRV = <100>;
+
+		reset-gpio = <&gpf 12 GPIO_ACTIVE_LOW>;
+		vcc-supply = <&eth0_power>;
+
+		interrupt-parent = <&gpe>;
+		interrupts = <19 0x4>;
+	};
 };
