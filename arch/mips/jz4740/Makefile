@@ -9,6 +9,8 @@ obj-y += prom.o time.o reset.o setup.o \
 
 obj-$(CONFIG_MACH_JZ4740) += gpio.o
 
+obj-$(CONFIG_SMP)	+= smp.o smp-entry.o
+
 CFLAGS_setup.o = -I$(src)/../../../scripts/dtc/libfdt
 
 # board specific support

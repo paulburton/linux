@@ -15,6 +15,7 @@
 
 #include <linux/clk.h>
 #include <linux/clk-provider.h>
+#include <linux/delay.h>
 #include <linux/interrupt.h>
 #include <linux/kernel.h>
 #include <linux/time.h>
@@ -163,4 +164,14 @@ void __init plat_time_init(void)
 
 	jz4740_timer_enable(TIMER_CLOCKEVENT);
 	jz4740_timer_enable(TIMER_CLOCKSOURCE);
+
+	tick_setup_hrtimer_broadcast();
+}
+
+unsigned long calibrate_delay_is_known(void)
+{
+	if (smp_processor_id() == 0)
+		return 0;
+
+	return loops_per_jiffy;
 }
