@@ -171,4 +171,6 @@ void __init plat_time_init(void)
 
 	jz4740_timer_enable(TIMER_CLOCKEVENT);
 	jz4740_timer_enable(TIMER_CLOCKSOURCE);
+
+	tick_setup_hrtimer_broadcast();
 }

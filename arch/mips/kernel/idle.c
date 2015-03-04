@@ -175,7 +175,6 @@ void __init check_wait(void)
 	case CPU_CAVIUM_OCTEON_PLUS:
 	case CPU_CAVIUM_OCTEON2:
 	case CPU_CAVIUM_OCTEON3:
-	case CPU_JZRISC:
 	case CPU_LOONGSON1:
 	case CPU_XLR:
 	case CPU_XLP:
@@ -243,6 +242,21 @@ void __init check_wait(void)
 		   cpu_wait = r4k_wait;
 		 */
 		break;
+	case CPU_JZRISC:
+		/*
+		 * The JZ4780 requires that when using both cores, any dirty
+		 * lines in the dcache are written back to DDR before a wait
+		 * instruction is executed. Otherwise if the line is accessed
+		 * by the other core whilst the core whose dcache holds the
+		 * dirty line is clock gated by the wait instruction, the
+		 * system will lock up. We handle this in the cpuidle driver
+		 * rather than here, so simply avoid the wait instruction
+		 * when multiple cores are in use.
+		 */
+		if (num_possible_cpus() > 1)
+			cpu_wait = NULL;
+		else
+			cpu_wait = r4k_wait_irqoff;
 	default:
 		break;
 	}

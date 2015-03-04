@@ -23,11 +23,13 @@
 #include <asm/bootinfo.h>
 #include <asm/fw/fw.h>
 #include <asm/mach-jz4740/base.h>
+#include <asm/mach-jz4740/smp.h>
 
 void __init prom_init(void)
 {
 	mips_machtype = MACH_INGENIC_JZ4740;
 	fw_init_cmdline();
+	ingenic_smp_init();
 }
 
 void __init prom_free_prom_memory(void)
