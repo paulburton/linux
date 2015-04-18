@@ -1,0 +1,21 @@
+/dts-v1/;
+
+#include "jz4775.dtsi"
+
+/ {
+	compatible = "ingenic,s2523b", "ingenic,jz4775";
+
+	chosen {
+		stdout-path = &uart3;
+	};
+
+	memory {
+		device_type = "memory";
+		reg = <0x0 0x10000000
+		       0x30000000 0x08000000>;
+	};
+};
+
+&ext {
+	clock-frequency = <24000000>;
+};
