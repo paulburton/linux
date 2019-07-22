@@ -1,0 +1,98 @@
+dist: trusty
+sudo: false
+language: c
+cache:
+  ccache: true
+  directories:
+  - .root-images
+  - .qemu
+  - .ub-tools
+git:
+  depth: 1
+script:
+  - bash .travis.build.sh
+
+notifications:
+  slack:
+    secure: k675wkISImZgF+bHlsTTmimvZC+CSwjjyWniGV+42CXYipBl3njr5weMkhCjmk8AQU3fXOW69Dh2aWQYL57d/ApKPtzA4XDAD6rN1kddmBHRXbfrrS0IgPSc3XnFgjLXkO/h/g55Q8oT9EYkYZ0Ei1ovRbPx+gk5sVbc8toy4ZidgTph6aIKxuBampDvqmRNvSG+kvpLDokMU3UByigBe+lvyPjZXilm948XJ3zWysm9C7bVw9dLQvZtb5+LY/2XqWP/uDOpsMNt+t5UPvmIe8XbVBBXzU2KURLB11Kg6+e7P9/M2PjI1rBMF4kXVLCFLt5c+GgebOwdyecSz4qchPdffFEhjEx+OgKxqe7VhXeaFBtwTywQhCqyQ9AdTeFXK6dn7rYsZe9w6G8QAGoRsWwWpWGTrBtt+H4c8KfQnKIJ09Bnzv4x3cp64dElmy3MkaKMtqeVcRepQa6yJ9Gj9QiE/HU9m8ocYg5yKth771QHpNPtYiai2Wy5Jd8/wGNMVxmSgy+3D0IuPkJRdwvGwBDVe4nBqatx1nyygt0PrJW/0M0bfD2wNxoMTNwRbI5Ehyeh1FWdjpOZj4oaH+35qTGOnXHB6FYLNBAOxsUPKini8/DTD5wlwLlvbzYSRYenrRBQn57BElsH5mEiXdQTBAAQJdpHYNMKLiTp5blLAPI=
+    on_success: change
+    on_failure: always
+
+env:
+  - CONFIG=64r6el
+  - CONFIG=64r6
+  - CONFIG=64r2el
+  - CONFIG=64r2
+  - CONFIG=64r1el
+  - CONFIG=64r1
+  - CONFIG=32r6el
+  - CONFIG=32r6
+  - CONFIG=32r2el
+  - CONFIG=32r2
+  - CONFIG=32r1el
+  - CONFIG=32r1
+  - CONFIG=micro32r2el
+  - CONFIG=micro32r2
+  - CONFIG=capcella
+  - CONFIG=decstation_64
+  - CONFIG=e55
+  - CONFIG=gcw0
+  - CONFIG=ip28
+  - CONFIG=jazz
+  - CONFIG=jmr3927
+  - CONFIG=lasat
+  - CONFIG=markeins
+  - CONFIG=mpc30x
+  - CONFIG=msp71xx
+  - CONFIG=mtx1
+  - CONFIG=nlm_xlp
+  - CONFIG=nlm_xlr
+  - CONFIG=pic32mzda
+  - CONFIG=rm200
+  - CONFIG=workpad
+  - CONFIG=bcm47xx
+  - CONFIG=db1xxx
+  - CONFIG=decstation
+  - CONFIG=decstation_r4k
+  - CONFIG=ip22
+  - CONFIG=rbtx49xx
+  - CONFIG=ar7
+  - CONFIG=ath25
+  - CONFIG=ath79
+  - CONFIG=bcm63xx
+  - CONFIG=bigsur
+  - CONFIG=bmips_be
+  - CONFIG=bmips_stb
+  - CONFIG=cavium_octeon
+  - CONFIG=ci20
+  - CONFIG=cobalt
+  - CONFIG=fuloong2e
+  - CONFIG=gpr
+  - CONFIG=ip27
+  - CONFIG=ip32
+  - CONFIG=lemote2f
+  - CONFIG=loongson1b
+  - CONFIG=loongson1c
+  - CONFIG=loongson3
+  - CONFIG=malta
+  - CONFIG=malta_kvm
+  - CONFIG=malta_kvm_guest
+  - CONFIG=malta_qemu_32r6
+  - CONFIG=maltaaprp
+  - CONFIG=maltasmvp
+  - CONFIG=maltasmvp_eva
+  - CONFIG=maltaup
+  - CONFIG=maltaup_xpa
+  - CONFIG=mips_paravirt
+  - CONFIG=omega2p
+  - CONFIG=pistachio
+  - CONFIG=pnx8335_stb225
+  - CONFIG=qi_lb60
+  - CONFIG=rb532
+  - CONFIG=rt305x
+  - CONFIG=sb1250_swarm
+  - CONFIG=tb0219
+  - CONFIG=tb0226
+  - CONFIG=tb0287
+  - CONFIG=vocore2
+  - CONFIG=xway
