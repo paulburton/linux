@@ -1,0 +1,29 @@
+name: CI
+
+on: [push]
+
+jobs:
+  checkout:
+    runs-on: ubuntu-latest
+    steps:
+    - uses: actions/checkout@v1
+    - name: Checkout Source
+  gnu_tools:
+    runs-on: ubuntu-latest
+    needs: checkout
+    steps:
+    - name: Download GNU Toolchain
+      run: |
+        wget https://mirrors.edge.kernel.org/pub/tools/crosstool/files/bin/x86_64/8.1.0/x86_64-gcc-8.1.0-nolibc-mips-linux.tar.xz
+        tar xaf x86_64-gcc-8.1.0-nolibc-mips-linux.tar.xz --transform='s/^/.tools\//'
+  build:
+    runs-on: ubuntu-latest
+    needs: gnu_tools
+    steps:
+    - uses: actions/checkout@v1
+    - name: List directory
+      run: |
+        ls -al
+    - name: Build 64r6el_defconfig
+      run: |
+        make ARCH=mips CROSS_COMPILE=${PWD}/.tools/gcc-8.1.0-nolibc/mips-linux/bin/mips-linux- 64r6el_defconfig all
